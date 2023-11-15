@@ -73,8 +73,10 @@ jobs:
       #         echo ${{ needs.run-matrix.outputs["$repo_result"] }}
       #     done
       - uses: actions/download-artifact@v3
+        with:
+          path: statuses
       - name: ls files
-        run: ls -ltr
+        run: cd statuses && ls -la
       - name: Dump GitHub context
         env:
           GITHUB_CONTEXT: ${{ toJSON(github) }}
