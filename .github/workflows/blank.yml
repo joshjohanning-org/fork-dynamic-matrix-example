@@ -115,7 +115,7 @@ jobs:
           fi
 
       - name: print failed repos
-        run: echo "${{ steps.get-status.outputs.failed-repos }}"
+        run: echo -e "${{ steps.get-status.outputs.failed-repos }}"
 
       
       - name: Dump GitHub context
