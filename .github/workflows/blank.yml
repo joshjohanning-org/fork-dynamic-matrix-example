@@ -18,13 +18,13 @@ jobs:
   setup:
     runs-on: ubuntu-latest
     outputs:
-      repos: ${{ steps.matrix.outputs.repos }}
+      repository: ${{ steps.matrix.outputs.repository }}
     steps:
       - name: build matrix
         id: matrix
         run: |
-          repos='{ "repository": ["repo1","repo2","repo3","repo4"] }'
-          echo "repos=$repos" >> "$GITHUB_OUTPUT"
+          repository='{ "repository": ["repo1","repo2","repo3","repo4"] }'
+          echo "repository=$repository" >> "$GITHUB_OUTPUT"
 
   run-matrix:
     needs: setup
@@ -32,6 +32,6 @@ jobs:
     strategy:
       fail-fast: false
       matrix:
-        repository: ${{ fromJson(needs.setup.outputs.repos) }}
+        repository: ${{ fromJson(needs.setup.outputs.repository) }}
     steps:
-      - run: echo ${{matrix.repository}}
+      - run: echo ${{ matrix.repository }}
