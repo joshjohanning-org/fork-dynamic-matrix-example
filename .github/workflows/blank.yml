@@ -114,7 +114,7 @@ jobs:
       - name: print failed repos
         run: echo -e "${{ steps.get-status.outputs.failed-repos }}"
 
-      - uses: actions@github-script@v6
+      - uses: actions/github-script@v6
         if: ${{ !steps.get-status.outputs.isfailed && steps.get-status.outputs.failed-repos != ''}}
         with:
           script: |
@@ -128,7 +128,7 @@ jobs:
               body: commentBody.replace(/  +/g, '')
             })
 
-      - uses: actions@github-script@v6
+      - uses: actions/github-script@v6
         if: ${{ steps.get-status.outputs.isfailed && steps.get-status.outputs.failed-repos != ''}}
         with:
           script: |
