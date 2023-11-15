@@ -78,6 +78,7 @@ jobs:
       - name: ls files
         run: cd statuses && ls -la
       - name: loop thru
+        id: get-status
         working-directory: statuses
         run: | 
           ISFAILED=0
@@ -99,16 +100,18 @@ jobs:
               done < "$file"
           done
           
-          # Print the failed and successful repos
           echo "Failed repos: ${failed_repos[@]}"
+          "failed-repos=${failed_repos[@]}" >> $GITHUB_OUTPUT
           echo "Successful repos: ${successful_repos[@]}"
+          "successful-repos=${failed_repos[@]}" >> $GITHUB_OUTPUT
 
           
           if [ $ISFAILED = 1 ]; then
-            echo "Status is failure"
+            "isfailed=true" >> $GITHUB_OUTPUT
           fi
 
-          
+      - name: print failed repos
+        run: echo "${{ steps.get-status.outputs.failed-repos }}"
 
       
       - name: Dump GitHub context
