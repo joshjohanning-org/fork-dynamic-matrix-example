@@ -79,7 +79,7 @@ jobs:
       - name: loop thru
         working-directory: statuses
         run: | 
-          for file in "./*.txt; do
+          for file in ./*.txt; do
               # Read each line in the file
               while IFS=, read -r repo status; do
                   echo "Repo: $repo, Status: $status"
