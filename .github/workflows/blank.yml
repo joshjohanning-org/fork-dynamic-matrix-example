@@ -91,7 +91,7 @@ jobs:
               done < "$file"    
           done
           
-          if [ $ISFAILED = 0 ]; then
+          if [ $ISFAILED = 1 ]; then
             echo "Status is not success. It is $status."
           fi
 
