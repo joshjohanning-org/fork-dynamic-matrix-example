@@ -38,6 +38,13 @@ jobs:
     strategy:
       matrix: ${{ fromJson(needs.setup.outputs.repository) }}
     steps:
+      - run: echo ${{ matrix.repository }}
+
+  post:
+    needs: run-matrix
+    runs-on: ubuntu-latest
+
+    steps:
       - name: Dump GitHub context
         env:
           GITHUB_CONTEXT: ${{ toJSON(github) }}
