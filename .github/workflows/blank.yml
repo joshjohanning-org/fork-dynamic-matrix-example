@@ -36,7 +36,6 @@ jobs:
     needs: setup
     runs-on: ubuntu-latest
     strategy:
-      fail-fast: false
       matrix:
         repository: ${{ fromJson(needs.setup.outputs.repository) }}
     steps:
