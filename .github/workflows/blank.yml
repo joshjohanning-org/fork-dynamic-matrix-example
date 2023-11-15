@@ -92,19 +92,16 @@ jobs:
                   echo "Repo: $repo, Status: $status"
                   if [ "$status" != "success" ]; then
                       # Add the repo to the failed list
-                      failed_repos+=("$repo\n")
+                      failed_repos+=("$repo")
                   else
                       # Add the repo to the successful list
-                      successful_repos+=("$repo\n")
+                      successful_repos+=("$repo")
                   fi
               done < "$file"
           done
           
           echo "Failed repos: ${failed_repos[@]}"
           echo "failed-repos=${failed_repos[@]}" >> $GITHUB_OUTPUT
-          
-          # IFS=','; failed_repos_str="${failed_repos[*]}"; IFS=$' \t\n'
-          # "failed-repos=$failed_repos_str" >> $GITHUB_OUTPUT
           
           echo "Successful repos: ${successful_repos[@]}"
           echo "successful-repos=${failed_repos[@]}" >> $GITHUB_OUTPUT
