@@ -48,6 +48,7 @@ jobs:
       - uses: actions/upload-artifact@v3
         if: always()
         with:
+          name: statuses
           path: ${{ matrix.repository }}.txt
 
 
@@ -73,8 +74,6 @@ jobs:
       #         echo ${{ needs.run-matrix.outputs["$repo_result"] }}
       #     done
       - uses: actions/download-artifact@v3
-        with:
-          path: statuses
       - name: ls files
         run: cd statuses && ls -la
       - name: Dump GitHub context
