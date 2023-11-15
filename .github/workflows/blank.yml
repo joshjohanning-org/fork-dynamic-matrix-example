@@ -101,9 +101,9 @@ jobs:
           done
           
           echo "Failed repos: ${failed_repos[@]}"
-          "failed-repos=${failed_repos[@]}" >> $GITHUB_OUTPUT
+          "failedrepos=${failed_repos[@]}" >> $GITHUB_OUTPUT
           echo "Successful repos: ${successful_repos[@]}"
-          "successful-repos=${failed_repos[@]}" >> $GITHUB_OUTPUT
+          "successfulrepos=${failed_repos[@]}" >> $GITHUB_OUTPUT
 
           
           if [ $ISFAILED = 1 ]; then
@@ -111,7 +111,7 @@ jobs:
           fi
 
       - name: print failed repos
-        run: echo "${{ steps.get-status.outputs.failed-repos }}"
+        run: echo "${{ steps.get-status.outputs.failedrepos }}"
 
       
       - name: Dump GitHub context
