@@ -18,7 +18,7 @@ jobs:
   setup:
     runs-on: ubuntu-latest
     outputs:
-      mymatrix: ${{ steps.matrix.outputs.repos }}
+      repos: ${{ steps.matrix.outputs.repos }}
     steps:
       - name: build matrix
         id: matrix
