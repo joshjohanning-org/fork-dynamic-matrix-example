@@ -42,10 +42,17 @@ jobs:
       matrix: ${{ fromJson(needs.setup.outputs.repository) }}
     steps:
       - run: echo ${{ matrix.repository }}
-      - run: echo "${{ matrix.repository }}, ${{ job.status }} > ${{ matrix.repository }}.txt
+      - name: upload status
+        if: always()
+        run: echo "${{ matrix.repository }}, ${{ job.status }}" > ${{ matrix.repository }}.txt
       - uses: actions/upload-artifact@v3
+        if: always()
         with:
           path: ${{ matrix.repository }}.txt
+
+
+
+          
       # - id: status
       #   run: | 
       #     "status=success" >> $GITHUB_OUTPUT
