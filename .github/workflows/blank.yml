@@ -35,16 +35,33 @@ jobs:
   run-matrix:
     needs: setup
     runs-on: ubuntu-latest
+    outputs:
+      ${{ matrix.repository }}_result: ${{ steps.status.outputs.status }}
     strategy:
+      fail-fast: false
       matrix: ${{ fromJson(needs.setup.outputs.repository) }}
     steps:
       - run: echo ${{ matrix.repository }}
+      - id: status
+        run: | 
+          "status=success" >> $GITHUB_OUTPUT
 
   post:
+    if: always()
     needs: run-matrix
     runs-on: ubuntu-latest
 
     steps:
+      - run: | 
+          # Parse the JSON and extract the repository array
+          repos=$(echo ${{ needs.setup.outputs.repository }} | jq -r '.repository[]')
+          
+          # Loop through each repository
+          for repo in $repos; do
+              echo $repo
+              echo ${{ needs.run-matrix.outputs["$repo_result"] }}
+          done
+
       - name: Dump GitHub context
         env:
           GITHUB_CONTEXT: ${{ toJSON(github) }}
