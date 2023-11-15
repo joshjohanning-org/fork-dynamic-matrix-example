@@ -34,4 +34,4 @@ jobs:
       matrix:
         repository: ${{ fromJson(needs.setup.outputs.repos) }}
     steps:
-      - run: echo ${{matrix.target}}
+      - run: echo ${{matrix.repository}}
