@@ -114,6 +114,33 @@ jobs:
       - name: print failed repos
         run: echo -e "${{ steps.get-status.outputs.failed-repos }}"
 
+      - uses: actions@github-script@v6
+        if: ${{ !steps.get-status.outputs.isfailed && steps.get-status.outputs.failed-repos != ''}}
+        with:
+          script: |
+            let commentBody
+            commentBody = `Success`
+            
+            await github.rest.issues.createComment({
+              owner: context.repo.owner,
+              repo: context.repo.repo,
+              issue_number: context.issue.number,
+              body: commentBody.replace(/  +/g, '')
+            })
+
+      - uses: actions@github-script@v6
+        if: ${{ steps.get-status.outputs.isfailed && steps.get-status.outputs.failed-repos != ''}}
+        with:
+          script: |
+            let commentBody
+            commentBody = `Failure`
+            
+            await github.rest.issues.createComment({
+              owner: context.repo.owner,
+              repo: context.repo.repo,
+              issue_number: context.issue.number,
+              body: commentBody.replace(/  +/g, '')
+            })
       
       - name: Dump GitHub context
         env:
