@@ -80,12 +80,20 @@ jobs:
       - name: loop thru
         working-directory: statuses
         run: | 
+          ISFAILED=0
           for file in ./*.txt; do
               # Read each line in the file
               while IFS=, read -r repo status; do
                   echo "Repo: $repo, Status: $status"
-              done < "$file"
+                  if [ "$status" != "success" ]; then
+                    ISFAILED=1
+                  fi
+              done < "$file"    
           done
+          
+          if [ $ISFAILED = 0 ]; then
+            echo "Status is not success. It is $status."
+          fi
 
       
       - name: Dump GitHub context
