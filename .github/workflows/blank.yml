@@ -1,0 +1,37 @@
+# This is a basic workflow to help you get started with Actions
+
+name: CI
+
+# Controls when the workflow will run
+on:
+  # Triggers the workflow on push or pull request events but only for the "main" branch
+  push:
+    branches: [ "main" ]
+  pull_request:
+    branches: [ "main" ]
+
+  # Allows you to run this workflow manually from the Actions tab
+  workflow_dispatch:
+
+# A workflow run is made up of one or more jobs that can run sequentially or in parallel
+jobs:
+  setup:
+    runs-on: ubuntu-latest
+    outputs:
+      mymatrix: ${{ steps.matrix.outputs.repos }}
+    steps:
+      - name: build matrix
+        id: matrix
+        run: |
+          repos='{ "repositories": ["repo1","repo2","repo3","repo4"] }'
+          echo "repos=$repos" >> "$GITHUB_OUTPUT"
+
+  run-matrix:
+    needs: setup
+    runs-on: ubuntu-latest
+    strategy:
+      fail-fast: false
+      matrix:
+        repo: ${{ fromJson(needs.setup.outputs.repos) }}
+    steps:
+      - run: echo ${{matrix.target}}
