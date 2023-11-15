@@ -36,7 +36,6 @@ jobs:
     needs: setup
     runs-on: ubuntu-latest
     strategy:
-      matrix:
-        repository: ${{ fromJson(needs.setup.outputs.repository) }}
+      matrix: ${{ fromJson(needs.setup.outputs.repository) }}
     steps:
       - run: echo ${{ matrix.repository }}
