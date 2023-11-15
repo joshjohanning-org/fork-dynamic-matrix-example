@@ -23,7 +23,7 @@ jobs:
       - name: build matrix
         id: matrix
         run: |
-          repos='{ "repositories": ["repo1","repo2","repo3","repo4"] }'
+          repos='{ "repository": ["repo1","repo2","repo3","repo4"] }'
           echo "repos=$repos" >> "$GITHUB_OUTPUT"
 
   run-matrix:
@@ -32,6 +32,6 @@ jobs:
     strategy:
       fail-fast: false
       matrix:
-        repo: ${{ fromJson(needs.setup.outputs.repos) }}
+        repository: ${{ fromJson(needs.setup.outputs.repos) }}
     steps:
       - run: echo ${{matrix.target}}
