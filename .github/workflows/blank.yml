@@ -113,6 +113,7 @@ jobs:
       - name: print failed repos
         run: echo -e "${{ steps.get-status.outputs.failed-repos }}"
 
+      # success, handling canceled / incomplete cases
       - uses: actions/github-script@v6
         if: ${{ !steps.get-status.outputs.isfailed && steps.get-status.outputs.failed-repos != ''}}
         with:
@@ -129,6 +130,7 @@ jobs:
               labels: ['migration', 'gei']
             })
 
+      # failure, handling canceled / incomplete cases
       - uses: actions/github-script@v6
         if: ${{ steps.get-status.outputs.isfailed && steps.get-status.outputs.failed-repos != ''}}
         with:
