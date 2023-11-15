@@ -76,6 +76,17 @@ jobs:
       - uses: actions/download-artifact@v3
       - name: ls files
         run: cd statuses && ls -la
+      - name: loop thru
+        working-directory: statuses
+        run: | 
+          for file in "./*.txt; do
+              # Read each line in the file
+              while IFS=, read -r repo status; do
+                  echo "Repo: $repo, Status: $status"
+              done < "$file"
+          done
+
+      
       - name: Dump GitHub context
         env:
           GITHUB_CONTEXT: ${{ toJSON(github) }}
