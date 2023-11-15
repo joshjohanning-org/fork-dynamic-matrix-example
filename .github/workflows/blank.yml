@@ -83,8 +83,8 @@ jobs:
         run: | 
           ISFAILED=0
 
-          failed_repos=()
-          successful_repos=()
+          failed_repos=""
+          successful_repos=""
           
           for file in ./*.txt; do
               # Read each line in the file
@@ -92,19 +92,19 @@ jobs:
                   echo "Repo: $repo, Status: $status"
                   if [ "$status" != "success" ]; then
                       # Add the repo to the failed list
-                      failed_repos+=("$repo")
+                      failed_repos+="$repo\n"
                   else
                       # Add the repo to the successful list
-                      successful_repos+=("$repo")
+                      successful_repos+="$repo\n"
                   fi
               done < "$file"
           done
           
-          echo "Failed repos: ${failed_repos[@]}"
-          echo "failed-repos=${failed_repos[@]}" >> $GITHUB_OUTPUT
+          echo -e "Failed repos: \n$failed_repos"
+          echo "failed-repos=$failed_repos" >> $GITHUB_OUTPUT
           
-          echo "Successful repos: ${successful_repos[@]}"
-          echo "successful-repos=${failed_repos[@]}" >> $GITHUB_OUTPUT
+          echo -e "Successful repos: \n$successful_repos"
+          echo "successful-repos=$successful_repos" >> $GITHUB_OUTPUT
 
           
           if [ $ISFAILED = 1 ]; then
