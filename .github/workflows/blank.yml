@@ -39,8 +39,9 @@ jobs:
       matrix: ${{ fromJson(needs.setup.outputs.repository) }}
     steps:
       - name: Dump GitHub context
-        id: github_context_step
-        run: echo '${{ toJSON(github) }}'
+        env:
+          GITHUB_CONTEXT: ${{ toJSON(github) }}
+        run: echo "$GITHUB_CONTEXT"
       - name: Dump job context
         run: echo '${{ toJSON(job) }}'
       - name: Dump steps context
