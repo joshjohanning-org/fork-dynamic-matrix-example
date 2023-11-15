@@ -78,6 +78,7 @@ jobs:
       - name: loop thru
         id: get-status
         working-directory: statuses
+        continue-on-error: true
         run: | 
           ISFAILED=0
 
