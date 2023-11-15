@@ -81,19 +81,34 @@ jobs:
         working-directory: statuses
         run: | 
           ISFAILED=0
+
+          failed_repos=()
+          successful_repos=()
+          
           for file in ./*.txt; do
               # Read each line in the file
               while IFS=, read -r repo status; do
                   echo "Repo: $repo, Status: $status"
                   if [ "$status" != "success" ]; then
-                    ISFAILED=1
+                      # Add the repo to the failed list
+                      failed_repos+=("$repo")
+                  else
+                      # Add the repo to the successful list
+                      successful_repos+=("$repo")
                   fi
-              done < "$file"    
+              done < "$file"
           done
           
+          # Print the failed and successful repos
+          echo "Failed repos: ${failed_repos[@]}"
+          echo "Successful repos: ${successful_repos[@]}"
+
+          
           if [ $ISFAILED = 1 ]; then
-            echo "Status is not success. It is $status."
+            echo "Status is failure"
           fi
+
+          
 
       
       - name: Dump GitHub context
