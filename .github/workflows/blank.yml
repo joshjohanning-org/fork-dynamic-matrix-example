@@ -42,7 +42,7 @@ jobs:
       matrix: ${{ fromJson(needs.setup.outputs.repository) }}
     steps:
       - run: echo ${{ matrix.repository }}
-      - run: exit 1 # fail it
+      - run: exit 0 # fail it
       - name: upload status
         if: always()
         run: echo "${{ matrix.repository }}, ${{ job.status }}" > ${{ matrix.repository }}.txt
