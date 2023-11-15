@@ -92,10 +92,10 @@ jobs:
                   echo "Repo: $repo, Status: $status"
                   if [ "$status" != "success" ]; then
                       # Add the repo to the failed list
-                      failed_repos+=("$repo")
+                      failed_repos+=("$repo\n")
                   else
                       # Add the repo to the successful list
-                      successful_repos+=("$repo")
+                      successful_repos+=("$repo\n")
                   fi
               done < "$file"
           done
