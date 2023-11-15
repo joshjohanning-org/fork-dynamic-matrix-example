@@ -75,8 +75,6 @@ jobs:
       #         echo ${{ needs.run-matrix.outputs["$repo_result"] }}
       #     done
       - uses: actions/download-artifact@v3
-      - name: ls files
-        run: cd statuses && ls -la
       - name: loop thru
         id: get-status
         working-directory: statuses
