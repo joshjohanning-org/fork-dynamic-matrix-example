@@ -95,6 +95,8 @@ jobs:
           
           if [ $ISFAILED = 1 ]; then
             "isfailed=true" >> $GITHUB_OUTPUT
+          else
+            "isfailed=false" >> $GITHUB_OUTPUT
           fi
 
       - name: print failed repos
