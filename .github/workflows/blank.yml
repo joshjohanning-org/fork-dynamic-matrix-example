@@ -106,6 +106,12 @@ jobs:
         run: |
           gh api /repos/${{ github.repository }}/actions/runs/${{ github.run_id }}/jobs --jq '.jobs[] | select(.conclusion != "success" and (.name | startswith("run-matrix"))) | { name: .name, conclusion: .conclusion}'
 
+      - name: and the api to get success jobs
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          gh api /repos/${{ github.repository }}/actions/runs/${{ github.run_id }}/jobs --jq '.jobs[] | select(.conclusion == "success" and (.name | startswith("run-matrix"))) | { name: .name, conclusion: .conclusion}'
+
       # success, handling canceled / incomplete cases
       - uses: actions/github-script@v6
         if: ${{ !steps.get-status.outputs.isfailed && steps.get-status.outputs.failed-repos != ''}}
