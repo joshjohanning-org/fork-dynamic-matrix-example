@@ -35,8 +35,6 @@ jobs:
   run-matrix:
     needs: setup
     runs-on: ubuntu-latest
-    # outputs:
-    #   ${{ matrix.repository }}_result: ${{ steps.status.outputs.status }}
     strategy:
       fail-fast: false
       matrix: ${{ fromJson(needs.setup.outputs.repository) }}
@@ -52,28 +50,12 @@ jobs:
           name: statuses
           path: ${{ matrix.repository }}.txt
 
-
-
-          
-      # - id: status
-      #   run: | 
-      #     "status=success" >> $GITHUB_OUTPUT
-
   post:
     if: always()
     needs: run-matrix
     runs-on: ubuntu-latest
 
     steps:
-      # - run: | 
-      #     # Parse the JSON and extract the repository array
-      #     repos=$(echo ${{ needs.setup.outputs.repository }} | jq -r '.repository[]')
-      #     
-      #     # Loop through each repository
-      #     for repo in $repos; do
-      #         echo $repo
-      #         echo ${{ needs.run-matrix.outputs["$repo_result"] }}
-      #     done
       - uses: actions/download-artifact@v3
       - name: loop thru
         id: get-status
@@ -112,6 +94,12 @@ jobs:
 
       - name: print failed repos
         run: echo -e "${{ steps.get-status.outputs.failed-repos }}"
+
+      - name: or we could use the api to get failed jobs
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          gh api /repos/${{ github.repo }}/actions/runs/${{ github.run_id }}/jobs --jq '.jobs[] | select(.conclusion != "success" and (.name | startswith("run-matrix"))) | { name: .name, conclusion: .conclusion}'
 
       # success, handling canceled / incomplete cases
       - uses: actions/github-script@v6
