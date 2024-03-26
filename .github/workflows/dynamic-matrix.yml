@@ -50,8 +50,10 @@ jobs:
     needs: setup
     runs-on: ubuntu-latest
     strategy:
+      matrix: 
+        repository: ${{ fromJson(needs.prepare.outputs.repositories) }}
       fail-fast: false
-      matrix: ${{ fromJson(needs.setup.outputs.repositories) }}
+      max-parallel: 15
     steps:
       - run: echo ${{ matrix.repository }}
       - name: create failures sometimes
