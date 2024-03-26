@@ -1,30 +1,43 @@
-# This is a basic workflow to help you get started with Actions
-
 name: CI
-
-# Controls when the workflow will run
 on:
-  # Triggers the workflow on push or pull request events but only for the "main" branch
-  push:
-    branches: [ "main" ]
-  pull_request:
-    branches: [ "main" ]
+  # workflow_dispatch:
+  issue_comment:
+    types: [created]
 
-  # Allows you to run this workflow manually from the Actions tab
-  workflow_dispatch:
-
-# A workflow run is made up of one or more jobs that can run sequentially or in parallel
 jobs:
   setup:
     runs-on: ubuntu-latest
+    if: contains(github.event.comment.body, '/run-automation')
     outputs:
       repository: ${{ steps.json.outputs.repository }}
     steps:
-      - name: build matrix
+      - name: Check out repository
+        uses: actions/checkout@v4
+      
+      - name: Parse issue body
+        id: parse-issue-body
+        uses: stefanbuck/github-issue-parser@v3
+
+      - run: echo $JSON_STRING
+        env:
+          JSON_STRING: ${{ steps.parse-issue-body.outputs.jsonString }}
+      
+      # - name: build matrix manually
+      #   id: json
+      #   run: |
+      #     repository='{ "repository": ["repo1","repo2","repo3","repo4"] }'
+      #     echo "repository=$repository" >> "$GITHUB_OUTPUT"
+
+      - name: Build matrix
+        uses: actions/github-script@v6
         id: json
-        run: |
-          repository='{ "repository": ["repo1","repo2","repo3","repo4"] }'
-          echo "repository=$repository" >> "$GITHUB_OUTPUT"
+        with:
+          script: |
+            let json = JSON.stringify(repositories);
+            console.log(json);
+            core.setOutput('repositories', json);
+        env:
+          REPOSITORIES: ${{ steps.parse-issue-body.outputs.issueparser_repositories }}
 
   test-output:
     needs: setup
