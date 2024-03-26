@@ -5,7 +5,7 @@ on:
     types: [created]
 
 jobs:
-  setup:
+  prepare:
     runs-on: ubuntu-latest
     if: contains(github.event.comment.body, '/run-automation')
     outputs:
@@ -41,13 +41,13 @@ jobs:
           REPOSITORIES: ${{ steps.parse-issue-body.outputs.issueparser_repositories }}
 
   test-output:
-    needs: setup
+    needs: prepare
     runs-on: ubuntu-latest
     steps:
-      - run: echo ${{ needs.setup.outputs.repositories }}
+      - run: echo ${{ needs.prepare.outputs.repositories }}
 
   run-matrix:
-    needs: setup
+    needs: prepare
     runs-on: ubuntu-latest
     strategy:
       matrix: 
