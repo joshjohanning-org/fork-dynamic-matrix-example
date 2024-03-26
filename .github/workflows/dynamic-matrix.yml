@@ -21,12 +21,6 @@ jobs:
       - run: echo $JSON_STRING
         env:
           JSON_STRING: ${{ steps.parse-issue-body.outputs.jsonString }}
-      
-      # - name: build matrix manually
-      #   id: json
-      #   run: |
-      #     repository='{ "repository": ["repo1","repo2","repo3","repo4"] }'
-      #     echo "repository=$repository" >> "$GITHUB_OUTPUT"
 
       - name: Build matrix
         uses: actions/github-script@v7
