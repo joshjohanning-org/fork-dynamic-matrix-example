@@ -4,7 +4,7 @@ on:
   workflow_dispatch:
 
 jobs:
-  setup:
+  prepare:
     runs-on: ubuntu-latest
     outputs:
       repository: ${{ steps.json.outputs.repository }}
@@ -15,18 +15,12 @@ jobs:
           repository='{ "repository": ["repo1","repo2","repo3","repo4"] }'
           echo "repository=$repository" >> "$GITHUB_OUTPUT"
 
-  test-output:
-    needs: setup
-    runs-on: ubuntu-latest
-    steps:
-      - run: echo ${{ needs.setup.outputs.repository }}
-
   run-matrix:
-    needs: setup
+    needs: prepare
     runs-on: ubuntu-latest
     strategy:
       fail-fast: false
-      matrix: ${{ fromJson(needs.setup.outputs.repository) }}
+      matrix: ${{ fromJson(needs.prepare.outputs.repository) }}
     steps:
       - run: echo ${{ matrix.repository }}
       - name: create failures sometimes
@@ -44,6 +38,12 @@ jobs:
           name: statuses
           path: ${{ matrix.repository }}.txt
 
+  test-output:
+    needs: prepare
+    runs-on: ubuntu-latest
+    steps:
+      - run: echo ${{ needs.setup.outputs.repository }}
+      
   post:
     if: always()
     needs: run-matrix
