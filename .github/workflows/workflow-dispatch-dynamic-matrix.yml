@@ -1,4 +1,4 @@
-name: CI
+name: workflow-dispatch-dynamic-matrix
 
 on:
   workflow_dispatch:
