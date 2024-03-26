@@ -33,12 +33,6 @@ jobs:
         env:
           REPOSITORIES: ${{ steps.parse-issue-body.outputs.issueparser_repositories }}
 
-  test-output:
-    needs: prepare
-    runs-on: ubuntu-latest
-    steps:
-      - run: echo ${{ needs.prepare.outputs.repositories }}
-
   run-matrix:
     needs: prepare
     runs-on: ubuntu-latest
@@ -64,6 +58,12 @@ jobs:
           name: statuses
           path: ${{ matrix.repository }}.txt
 
+  test-output:
+    needs: prepare
+    runs-on: ubuntu-latest
+    steps:
+      - run: echo ${{ needs.prepare.outputs.repositories }}
+      
   post:
     if: always()
     needs: run-matrix
