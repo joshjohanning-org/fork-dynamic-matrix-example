@@ -1,4 +1,4 @@
-name: CI
+name: dynamic-matrix
 on:
   # workflow_dispatch:
   issue_comment:
