@@ -9,7 +9,7 @@ jobs:
     runs-on: ubuntu-latest
     if: contains(github.event.comment.body, '/run-automation')
     outputs:
-      repository: ${{ steps.json.outputs.repository }}
+      repositories: ${{ steps.json.outputs.repository }}
     steps:
       - name: Check out repository
         uses: actions/checkout@v4
