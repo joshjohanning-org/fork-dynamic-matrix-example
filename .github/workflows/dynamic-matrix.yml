@@ -33,7 +33,7 @@ jobs:
         id: json
         with:
           script: |
-            let json = JSON.stringify(repositories);
+            let json = JSON.stringify(process.env.REPOSITORIES);
             console.log(json);
             core.setOutput('repositories', json);
         env:
