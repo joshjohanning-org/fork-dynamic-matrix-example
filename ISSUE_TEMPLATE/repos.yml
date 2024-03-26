@@ -1,0 +1,15 @@
+name: Repos input
+description: Perform a set of actions against a list of repos
+title: "Repo list!"
+labels: ["migration"]
+body:
+  - type: textarea
+    id: repositories
+    attributes:
+      label: Repositories
+      description: Please enter the repositories that you would like to run the automation again
+      placeholder: |
+        your-repository-1
+        your-repository-2
+    validations:
+      required: true
