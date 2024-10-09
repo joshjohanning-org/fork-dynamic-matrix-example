@@ -1,0 +1,43 @@
+{
+  "repositories": [
+    {
+      "name": "repo1",
+      "description": "This is the first repository.",
+      "created_at": "2023-01-01T12:00:00Z",
+      "updated_at": "2023-10-01T12:00:00Z",
+      "owner": "user1",
+      "private": false,
+      "language": "JavaScript",
+      "stars": 150,
+      "forks": 30,
+      "issues": 10,
+      "pull_requests": 5
+    },
+    {
+      "name": "repo2",
+      "description": "This is the second repository.",
+      "created_at": "2022-05-15T08:30:00Z",
+      "updated_at": "2023-09-20T14:45:00Z",
+      "owner": "user2",
+      "private": true,
+      "language": "Python",
+      "stars": 200,
+      "forks": 50,
+      "issues": 20,
+      "pull_requests": 10
+    },
+    {
+      "name": "repo3",
+      "description": "This is the third repository.",
+      "created_at": "2021-11-11T10:00:00Z",
+      "updated_at": "2023-08-15T16:00:00Z",
+      "owner": "user3",
+      "private": false,
+      "language": "Ruby",
+      "stars": 300,
+      "forks": 70,
+      "issues": 5,
+      "pull_requests": 2
+    }
+  ]
+}

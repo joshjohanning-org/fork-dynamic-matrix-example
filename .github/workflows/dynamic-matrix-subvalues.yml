@@ -1,0 +1,186 @@
+name: dynamic-matrix
+on:
+  issue_comment:
+    types: [created]
+
+jobs:
+  prepare:
+    runs-on: ubuntu-latest
+    if: contains(github.event.comment.body, '/run-automation')
+    outputs:
+      repositories: ${{ steps.json.outputs.repositories }}
+    steps:
+      - name: Check out repository
+        uses: actions/checkout@v4
+
+      - name: Build matrix
+        uses: actions/github-script@v7
+        id: json
+        with:
+          script: |
+            const fs = require('fs');
+            const path = require('path');
+
+            // Define the path to the JSON file
+            const filePath = path.join(__dirname, 'index.json');
+
+            // Read the JSON file
+            fs.readFile(filePath, 'utf8', (err, data) => {
+              if (err) {
+                console.error('Error reading the file:', err);
+                return;
+              }
+
+              try {
+                // Parse the JSON data
+                const jsonData = JSON.parse(data);
+
+                // Log the parsed data
+                console.log('Parsed JSON data:', jsonData);
+                core.setOutput('repositories', json);
+              } catch (parseErr) {
+                console.error('Error parsing JSON:', parseErr);
+              }
+            });
+
+  run-matrix:
+    needs: prepare
+    runs-on: ubuntu-latest
+    strategy:
+      matrix: 
+        repository: ${{ fromJson(needs.prepare.outputs.repositories) }}
+      fail-fast: false
+      max-parallel: 15
+    steps:
+      - run: echo ${{ matrix.repository }}
+      - name: create failures sometimes
+        run: | 
+          milliseconds=$(date +%s%N | cut -b1-13)
+          if (( milliseconds % 2 == 0 )); then
+              exit 1
+          fi
+      - name: upload status
+        if: always()
+        run: echo "${{ matrix.repository }}, ${{ job.status }}" > ${{ matrix.repository }}.txt
+      - uses: actions/upload-artifact@v3
+        if: always()
+        with:
+          name: statuses
+          path: ${{ matrix.repository }}.txt
+
+  test-output:
+    needs: prepare
+    runs-on: ubuntu-latest
+    steps:
+      - run: echo ${{ needs.prepare.outputs.repositories }}
+      
+  post:
+    if: always()
+    needs: run-matrix
+    runs-on: ubuntu-latest
+
+    steps:
+      - uses: actions/download-artifact@v3
+      - name: loop thru
+        id: get-status
+        working-directory: statuses
+        continue-on-error: true
+        run: | 
+          ISFAILED=0
+
+          failed_repos=""
+          successful_repos=""
+          
+          for file in ./*.txt; do
+              # Read each line in the file
+              while IFS=, read -r repo status; do
+                  echo "Repo: $repo, Status: $status"
+                  if [ "$status" != "success" ]; then
+                      # Add the repo to the failed list
+                      failed_repos+="$repo\n"
+                  else
+                      # Add the repo to the successful list
+                      successful_repos+="$repo\n"
+                  fi
+              done < "$file"
+          done
+          
+          echo -e "Failed repos: \n$failed_repos"
+          echo "failed-repos=$failed_repos" >> $GITHUB_OUTPUT
+          
+          echo -e "Successful repos: \n$successful_repos"
+          echo "successful-repos=$successful_repos" >> $GITHUB_OUTPUT
+
+          
+          if [ $ISFAILED = 1 ]; then
+            "isfailed=true" >> $GITHUB_OUTPUT
+          else
+            "isfailed=false" >> $GITHUB_OUTPUT
+          fi
+
+      - name: print failed repos
+        run: echo -e "${{ steps.get-status.outputs.failed-repos }}"
+
+      - name: or we could use the api to get failed jobs
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          gh api /repos/${{ github.repository }}/actions/runs/${{ github.run_id }}/jobs --jq '.jobs[] | select(.conclusion != "success" and (.name | startswith("run-matrix"))) | { name: .name, conclusion: .conclusion}'
+
+      - name: and the api to get success jobs
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          gh api /repos/${{ github.repository }}/actions/runs/${{ github.run_id }}/jobs --jq '.jobs[] | select(.conclusion == "success" and (.name | startswith("run-matrix"))) | { name: .name, conclusion: .conclusion}'
+
+      # success, handling canceled / incomplete cases
+      - uses: actions/github-script@v7
+        if: ${{ !steps.get-status.outputs.isfailed && steps.get-status.outputs.failed-repos != ''}}
+        with:
+          script: |
+            let commentBody
+            commentBody = `Success`
+            
+            await github.rest.issues.create({
+              owner: context.repo.owner,
+              repo: context.repo.repo,
+              issue_number: context.issue.number,
+              title: 'new issue',
+              body: commentBody.replace(/  +/g, ''),
+              labels: ['migration', 'gei']
+            })
+
+      # failure, handling canceled / incomplete cases
+      - uses: actions/github-script@v7
+        if: ${{ steps.get-status.outputs.isfailed && steps.get-status.outputs.failed-repos != ''}}
+        with:
+          script: |
+            let commentBody
+            commentBody = `Failure`
+            
+            await github.rest.issues.create({
+              owner: context.repo.owner,
+              repo: context.repo.repo,
+              issue_number: context.issue.number,
+              title: 'new issue',
+              body: commentBody.replace(/  +/g, ''),
+              labels: ['migration', 'gei']
+            })
+      
+      - name: Dump GitHub context
+        env:
+          GITHUB_CONTEXT: ${{ toJSON(github) }}
+        run: echo "$GITHUB_CONTEXT"
+      - name: Dump job context
+        run: echo '${{ toJSON(job) }}'
+      - name: Dump steps context
+        run: echo '${{ toJSON(steps) }}'
+      - name: Dump runner context
+        run: echo '${{ toJSON(runner) }}'
+      - name: Dump strategy context
+        run: echo '${{ toJSON(strategy) }}'
+      - name: Dump matrix context
+        run: echo '${{ toJSON(matrix) }}'
+    
+      - run: echo ${{ matrix.repository }}
+      
