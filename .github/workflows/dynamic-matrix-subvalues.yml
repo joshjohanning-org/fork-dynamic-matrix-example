@@ -138,7 +138,7 @@ jobs:
       - uses: actions/upload-artifact@v4
         if: always()
         with:
-          name: statuses
+          name: ${{ matrix.repositories.name }}-1
           path: ${{ matrix.repositories.name }}.txt
 
   run-matrix-2:
@@ -168,7 +168,7 @@ jobs:
       - uses: actions/upload-artifact@v4
         if: always()
         with:
-          name: statuses
+          name: ${{ matrix.repositories.name }}-2
           path: ${{ matrix.repositories.name }}.txt
 
   test-output:
