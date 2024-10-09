@@ -103,8 +103,7 @@ jobs:
     name: ${{ matrix.repositories.name }}
     runs-on: ubuntu-latest
     strategy:
-      matrix: 
-        repositories: ${{ fromJson(fromJson(needs.prepare.outputs.repositories).organization) }}
+      matrix: ${{ fromJson(fromJson(needs.prepare.outputs.repositories).organization.repositories) }}
       fail-fast: false
       max-parallel: 15
     steps:
@@ -134,6 +133,9 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - run: echo ${{ needs.prepare.outputs.repositories }}
+      - run: echo ${{ fromJson(fromJson(needs.prepare.outputs.repositories).organization.repositories) }}
+      - run: echo ${{ fromJson(fromJson(needs.prepare.outputs.repositories).organization) }}
+      - run: echo ${{ fromJson(fromJson(needs.prepare.outputs.repositories).repositories) }}
       
   # post:
   #   if: always()
