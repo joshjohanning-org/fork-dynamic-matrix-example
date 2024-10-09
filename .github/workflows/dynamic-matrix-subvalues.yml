@@ -73,7 +73,7 @@ jobs:
     name: ${{ matrix.repositories.name }}
     runs-on: ubuntu-latest
     strategy:
-      matrix: "${{ fromJson(needs.prepare.outputs.repositories).organization }}"
+      matrix: "${{ fromJson(needs.prepare.outputs.repositories).organization.repository }}"
       fail-fast: false
       max-parallel: 15
     steps:
