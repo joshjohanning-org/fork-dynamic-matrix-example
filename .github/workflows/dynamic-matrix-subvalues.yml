@@ -22,7 +22,7 @@ jobs:
             const path = require('path');
 
             // Define the path to the JSON file
-            const filePath = path.join(process.env.GITHUB_WORKSPACE, 'index-2.json');
+            const filePath = path.join(process.env.GITHUB_WORKSPACE, 'index2.json');
 
             // Read the JSON file
             fs.readFile(filePath, 'utf8', (err, data) => {
