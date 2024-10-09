@@ -21,7 +21,7 @@ jobs:
             const path = require('path');
 
             // Define the path to the JSON file
-            const filePath = path.join(__dirname, 'index.json');
+            const filePath = path.join(${{ github.workspace }}, 'index.json');
 
             // Read the JSON file
             fs.readFile(filePath, 'utf8', (err, data) => {
