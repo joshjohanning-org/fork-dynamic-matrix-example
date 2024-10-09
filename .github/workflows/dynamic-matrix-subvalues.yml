@@ -49,7 +49,11 @@ jobs:
         run: |
           jq '{"repositories": [.repositories[].name]}' index.json
           jq=$(jq '{"repositories": [.repositories[].name]}' index.json)
-          echo "repositories=$jq" >> $GITHUB_OUTPUT
+          # Process the JSON file and extract repository names
+          jq_output=$(jq -c '{"repositories": [.repositories[].name]}' index.json)
+
+          # Append the result to the GitHub Actions output
+          echo "repositories=$jq_output" >> $GITHUB_OUTPUT
   run-matrix:
     needs: prepare
     runs-on: ubuntu-latest
