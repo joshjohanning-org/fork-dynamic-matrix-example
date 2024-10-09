@@ -60,7 +60,7 @@ jobs:
     needs: prepare
     runs-on: ubuntu-latest
     strategy:
-      matrix: ${{ fromJson(needs.prepare.outputs.repositories ).name }}
+      matrix: ${{ fromJson(needs.prepare.outputs.repositories ) }}.name
       fail-fast: false
       max-parallel: 15
     steps:
