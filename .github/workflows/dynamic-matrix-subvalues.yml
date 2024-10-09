@@ -58,14 +58,14 @@ jobs:
       #     echo "repositories=$jq_output" >> $GITHUB_OUTPUT
   run-matrix:
     needs: prepare
-    name: ${{ fromJson(matrix.name ) }}
+    # name: ${{ matrix.repository.name }}
     runs-on: ubuntu-latest
     strategy:
       matrix: ${{ fromJson(needs.prepare.outputs.repositories ) }}
       fail-fast: false
       max-parallel: 15
     steps:
-      - run: echo ${{ matrix.repository }}
+      - run: echo ${{ matrix }}
       - name: create failures sometimes
         run: | 
           milliseconds=$(date +%s%N | cut -b1-13)
