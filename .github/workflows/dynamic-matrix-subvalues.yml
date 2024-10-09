@@ -6,7 +6,6 @@ on:
 jobs:
   prepare:
     runs-on: ubuntu-latest
-    if: contains(github.event.comment.body, '/run-automation')
     outputs:
       repositories: ${{ steps.json.outputs.repositories }}
     steps:
