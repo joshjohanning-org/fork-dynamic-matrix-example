@@ -133,6 +133,7 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - run: echo ${{ needs.prepare.outputs.repositories }}
+      - run: echo ${{ fromJson(fromJson(needs.prepare.outputs.repositories)) }}
       - run: echo ${{ fromJson(fromJson(needs.prepare.outputs.repositories).organization.repositories) }}
       - run: echo ${{ fromJson(fromJson(needs.prepare.outputs.repositories).organization) }}
       - run: echo ${{ fromJson(fromJson(needs.prepare.outputs.repositories).repositories) }}
