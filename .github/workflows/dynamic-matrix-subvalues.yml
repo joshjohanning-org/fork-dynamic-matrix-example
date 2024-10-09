@@ -65,12 +65,17 @@ jobs:
       fail-fast: false
       max-parallel: 15
     steps:
-      - run: echo "${{ fromJson(matrix) }}"
+      # - run: echo "${{ fromJson(matrix) }}"
+      - name: Dump matrix context
+        env:
+          MATRIX_CONTEXT: ${{ toJson(matrix) }}
+        run: echo "$MATRIX_CONTEXT"
       - name: create failures sometimes
         run: | 
           milliseconds=$(date +%s%N | cut -b1-13)
           if (( milliseconds % 2 == 0 )); then
-              exit 1
+              # exit 1
+              exit 0
           fi
       - name: upload status
         if: always()
