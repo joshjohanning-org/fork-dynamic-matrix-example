@@ -38,7 +38,7 @@ jobs:
                 console.log('Parsed JSON data:', jsonData);
 
                 // Set the output for GitHub Actions
-                core.setOutput('repositories', JSON.stringify(jsonData.repositories));
+                //core.setOutput('repositories', JSON.stringify(jsonData.repositories));
               } catch (parseErr) {
                 console.error('Error parsing JSON:', parseErr);
               }
@@ -48,7 +48,7 @@ jobs:
         id: json
         run: |
           file=$(cat index.json)
-          echo "myoutput=$(jq -cn --argjson repos "$file" '{repository: $repos}')" >> $GITHUB_OUTPUT          
+          echo "repositories=$(jq -cn --argjson repos "$file" '{repository: $repos}')" >> $GITHUB_OUTPUT          
 
   run-matrix:
     needs: prepare
