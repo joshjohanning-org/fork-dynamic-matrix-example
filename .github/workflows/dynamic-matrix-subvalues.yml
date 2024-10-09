@@ -21,7 +21,7 @@ jobs:
             const path = require('path');
 
             // Define the path to the JSON file
-            const filePath = path.join(process.env.GITHUB_WORKSPACE, 'index.json');
+            const filePath = path.join(${{ github.workspace }}, 'index.json');
 
             // Read the JSON file
             fs.readFile(filePath, 'utf8', (err, data) => {
@@ -47,7 +47,7 @@ jobs:
     runs-on: ubuntu-latest
     strategy:
       matrix: 
-        repository: ${{ fromJson(needs.prepare.outputs.repositories.name) }}
+        repository: ${{ fromJson(needs.prepare.outputs.repositories) }}.repository
       fail-fast: false
       max-parallel: 15
     steps:
