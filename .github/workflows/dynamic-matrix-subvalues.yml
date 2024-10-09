@@ -134,12 +134,12 @@ jobs:
           fi
       - name: upload status
         if: always()
-        run: echo "${{ matrix.repository }}, ${{ job.status }}" > ${{ matrix.repository }}.txt
-      - uses: actions/upload-artifact@v3
+        run: echo "${{ matrix.repositories.name }}, ${{ job.status }}" > ${{ matrix.repositories.name }}.txt
+      - uses: actions/upload-artifact@v4
         if: always()
         with:
           name: statuses
-          path: ${{ matrix.repository }}.txt
+          path: ${{ matrix.repositories.name }}.txt
 
   run-matrix-2:
     needs: prepare-2
@@ -164,12 +164,12 @@ jobs:
           fi
       - name: upload status
         if: always()
-        run: echo "${{ matrix.repository }}, ${{ job.status }}" > ${{ matrix.repository }}.txt
-      - uses: actions/upload-artifact@v3
+        run: echo "${{ matrix.repositories.name }}, ${{ job.status }}" > ${{ matrix.repositories.name }}.txt
+      - uses: actions/upload-artifact@v4
         if: always()
         with:
           name: statuses
-          path: ${{ matrix.repository }}.txt
+          path: ${{ matrix.repositories.name }}.txt
 
   test-output:
     needs: [prepare-1, prepare-2]
