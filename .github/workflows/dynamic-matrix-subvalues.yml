@@ -48,8 +48,9 @@ jobs:
         id: json
         run: |
           file=$(cat index.json)
-          echo "repositories=$(jq -cn --argjson repos "$file" '{repository: $repos}')" >> $GITHUB_OUTPUT          
-
+          repositories=$(jq -cn --argjson repos "$file" '{repository: $repos}')
+          echo $repositories
+          echo "repositories=$repositories"
   run-matrix:
     needs: prepare
     runs-on: ubuntu-latest
