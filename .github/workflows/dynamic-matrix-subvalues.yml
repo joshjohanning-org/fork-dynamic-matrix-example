@@ -12,6 +12,7 @@ jobs:
       - name: Check out repository
         uses: actions/checkout@v4
 
+      # works
       - name: Build matrix
         uses: actions/github-script@v7
         id: json
@@ -21,7 +22,7 @@ jobs:
             const path = require('path');
 
             // Define the path to the JSON file
-            const filePath = path.join(process.env.GITHUB_WORKSPACE, 'index.json');
+            const filePath = path.join(process.env.GITHUB_WORKSPACE, 'index-2.json');
 
             // Read the JSON file
             fs.readFile(filePath, 'utf8', (err, data) => {
@@ -61,7 +62,7 @@ jobs:
     name: ${{ matrix.repositories.name }}
     runs-on: ubuntu-latest
     strategy:
-      matrix: ${{ fromJson(needs.prepare.outputs.repositories ) }}
+      matrix: ${{ fromJson(needs.prepare.outputs.repositories ).organization.repositories }}
       fail-fast: false
       max-parallel: 15
     steps:
