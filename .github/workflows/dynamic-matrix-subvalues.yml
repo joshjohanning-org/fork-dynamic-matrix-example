@@ -21,7 +21,7 @@ jobs:
             const path = require('path');
 
             // Define the path to the JSON file
-            const filePath = path.join(process.env.GITHUB_WORKSPACE 'index.json');
+            const filePath = path.join(process.env.GITHUB_WORKSPACE, 'index.json');
 
             // Read the JSON file
             fs.readFile(filePath, 'utf8', (err, data) => {
@@ -36,7 +36,9 @@ jobs:
 
                 // Log the parsed data
                 console.log('Parsed JSON data:', jsonData);
-                core.setOutput('repositories', json);
+
+                // Set the output for GitHub Actions
+                core.setOutput('repositories', JSON.stringify(jsonData.repositories));
               } catch (parseErr) {
                 console.error('Error parsing JSON:', parseErr);
               }
