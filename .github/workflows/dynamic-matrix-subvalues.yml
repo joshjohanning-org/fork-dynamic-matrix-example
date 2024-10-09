@@ -65,7 +65,7 @@ jobs:
       fail-fast: false
       max-parallel: 15
     steps:
-      - run: echo ${{ matrix }}
+      - run: echo "${{ fromJson(matrix) }}"
       - name: create failures sometimes
         run: | 
           milliseconds=$(date +%s%N | cut -b1-13)
