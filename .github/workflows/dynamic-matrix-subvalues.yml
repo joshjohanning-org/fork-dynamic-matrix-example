@@ -73,37 +73,7 @@ jobs:
     name: ${{ matrix.repositories.name }}
     runs-on: ubuntu-latest
     strategy:
-      matrix: "${{ fromJson(needs.prepare.outputs.repositories).organization.repositories }}"
-      fail-fast: false
-      max-parallel: 15
-    steps:
-      - run: echo "${{ toJson(matrix) }}"
-      - name: Dump matrix context
-        env:
-          MATRIX_CONTEXT: ${{ toJson(matrix) }}
-        run: echo "$MATRIX_CONTEXT"
-      - name: create failures sometimes
-        run: | 
-          milliseconds=$(date +%s%N | cut -b1-13)
-          if (( milliseconds % 2 == 0 )); then
-              # exit 1
-              exit 0
-          fi
-      - name: upload status
-        if: always()
-        run: echo "${{ matrix.repository }}, ${{ job.status }}" > ${{ matrix.repository }}.txt
-      - uses: actions/upload-artifact@v3
-        if: always()
-        with:
-          name: statuses
-          path: ${{ matrix.repository }}.txt
-
-  run-matrix2:
-    needs: prepare
-    name: ${{ matrix.repositories.name }}
-    runs-on: ubuntu-latest
-    strategy:
-      matrix: ${{ fromJson(fromJson(needs.prepare.outputs.repositories).organization.repositories) }}
+      matrix: "${{ fromJson(needs.prepare.outputs.repositories).organization }}"
       fail-fast: false
       max-parallel: 15
     steps:
@@ -133,11 +103,7 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - run: echo ${{ needs.prepare.outputs.repositories }}
-      - run: echo ${{ fromJson(fromJson(needs.prepare.outputs.repositories)) }}
-      - run: echo ${{ fromJson(fromJson(needs.prepare.outputs.repositories).organization.repositories) }}
-      - run: echo ${{ fromJson(fromJson(needs.prepare.outputs.repositories).organization) }}
-      - run: echo ${{ fromJson(fromJson(needs.prepare.outputs.repositories).repositories) }}
-      
+
   # post:
   #   if: always()
   #   needs: run-matrix
