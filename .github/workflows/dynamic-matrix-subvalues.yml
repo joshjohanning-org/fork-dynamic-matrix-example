@@ -1,4 +1,4 @@
-name: dynamic-matrix
+name: dynamic-matrix-test-json
 on:
   push:
   workflow_dispatch:
@@ -14,7 +14,7 @@ jobs:
 
       - name: Build matrix
         uses: actions/github-script@v7
-        id: json
+        id: json-old
         with:
           script: |
             const fs = require('fs');
@@ -44,12 +44,18 @@ jobs:
               }
             });
 
+      - name: build matrix 2
+        id: json
+        run: |
+          file=$(cat index.json)
+          echo "myoutput=$(jq -cn --argjson repos "$file" '{repository: $repos}')" >> $GITHUB_OUTPUT          
+
   run-matrix:
     needs: prepare
     runs-on: ubuntu-latest
     strategy:
       matrix: 
-        repository: ${{ fromJson(needs.prepare.outputs.repositories.repository.name) }}
+        repository: ${{ fromJson(needs.prepare.outputs.repositories.repository ) }}
       fail-fast: false
       max-parallel: 15
     steps:
