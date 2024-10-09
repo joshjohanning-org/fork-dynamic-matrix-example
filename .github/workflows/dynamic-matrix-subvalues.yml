@@ -38,7 +38,8 @@ jobs:
                 console.log('Parsed JSON data:', jsonData);
 
                 // Set the output for GitHub Actions
-                core.setOutput('repositories', JSON.stringify(jsonData.repositories));
+                // core.setOutput('repositories', JSON.stringify(jsonData.repositories));
+                core.setOutput('repositories', JSON.stringify(jsonData));
               } catch (parseErr) {
                 console.error('Error parsing JSON:', parseErr);
               }
