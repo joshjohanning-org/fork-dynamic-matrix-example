@@ -7,7 +7,7 @@ jobs:
   prepare:
     runs-on: ubuntu-latest
     outputs:
-      repositories: ${{ steps.json.outputs.repositories }}
+      repositories: ${{ steps.json22222.outputs.repositories }}
     steps:
       - name: Check out repository
         uses: actions/checkout@v4
@@ -22,7 +22,7 @@ jobs:
             const path = require('path');
 
             // Define the path to the JSON file
-            const filePath = path.join(process.env.GITHUB_WORKSPACE, 'index.json');
+            const filePath = path.join(process.env.GITHUB_WORKSPACE, 'index2.json');
 
             // Read the JSON file
             fs.readFile(filePath, 'utf8', (err, data) => {
@@ -73,7 +73,37 @@ jobs:
     name: ${{ matrix.repositories.name }}
     runs-on: ubuntu-latest
     strategy:
-      matrix: ${{ fromJson(needs.prepare.outputs.repositories) }}
+      matrix: ${{ fromJson(needs.prepare.outputs.repositories.organization.repositories) }}
+      fail-fast: false
+      max-parallel: 15
+    steps:
+      - run: echo "${{ toJson(matrix) }}"
+      - name: Dump matrix context
+        env:
+          MATRIX_CONTEXT: ${{ toJson(matrix) }}
+        run: echo "$MATRIX_CONTEXT"
+      - name: create failures sometimes
+        run: | 
+          milliseconds=$(date +%s%N | cut -b1-13)
+          if (( milliseconds % 2 == 0 )); then
+              # exit 1
+              exit 0
+          fi
+      - name: upload status
+        if: always()
+        run: echo "${{ matrix.repository }}, ${{ job.status }}" > ${{ matrix.repository }}.txt
+      - uses: actions/upload-artifact@v3
+        if: always()
+        with:
+          name: statuses
+          path: ${{ matrix.repository }}.txt
+
+  run-matrix2:
+    needs: prepare
+    name: ${{ matrix.repositories.name }}
+    runs-on: ubuntu-latest
+    strategy:
+      matrix: ${{ fromJson(needs.prepare.outputs.repositories.organization.repository) }}
       fail-fast: false
       max-parallel: 15
     steps:
