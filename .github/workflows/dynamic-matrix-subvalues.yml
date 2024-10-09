@@ -47,10 +47,9 @@ jobs:
       - name: build matrix 2
         id: json
         run: |
-          file=$(cat index.json)
-          repositories=$(jq -cn --argjson repos "$file" '{repository: $repos}')
-          echo $repositories
-          echo "repositories=$repositories"
+          jq '{"repositories": [.repositories[].name]}' index.json
+          jq=$(jq '{"repositories": [.repositories[].name]}' index.json)
+          echo "repositories=$jq" >> $GITHUB_OUTPUT
   run-matrix:
     needs: prepare
     runs-on: ubuntu-latest
