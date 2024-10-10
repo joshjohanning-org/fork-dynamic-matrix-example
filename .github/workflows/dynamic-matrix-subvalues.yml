@@ -128,7 +128,7 @@ jobs:
           MATRIX_CONTEXT: ${{ toJson(matrix) }}
         run: echo "$MATRIX_CONTEXT"
       - if: ${{ matrix.repositories.name == 'repo2' }}
-        run: sleep 10s && exit 0
+        run: sleep 2s && exit 1
       - name: create failures sometimes
         run: | 
           milliseconds=$(date +%s%N | cut -b1-13)
@@ -189,7 +189,7 @@ jobs:
   if-failure:
     needs: [prepare-1, run-matrix-1]
     runs-on: ubuntu-latest
-    if: failure()
+    if: always() && needs.run-matrix-1.outputs.is-failure == 'true'
     steps:
       - run: echo "${{ needs.run-matrix-1.outputs.is-failure }}"
 
