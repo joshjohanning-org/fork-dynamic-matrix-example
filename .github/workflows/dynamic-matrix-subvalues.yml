@@ -187,6 +187,7 @@ jobs:
   if-failure:
     needs: [prepare-1, run-matrix-1]
     runs-on: ubuntu-latest
+    if: failure()
     steps:
       - run: echo "${{ needs.run-matrix-1.outputs.is-failure }}
 
