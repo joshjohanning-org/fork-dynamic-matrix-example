@@ -303,3 +303,16 @@ jobs:
     
   #     - run: echo ${{ matrix.repository }}
       
+  deploy-1:
+    runs-on: ubuntu-latest
+    environment: test
+    steps:
+      - run: echo "hi"
+
+  deploy-2:
+    runs-on: ubuntu-latest
+    environment: test
+    needs: deploy-1
+    steps:
+      - run: echo "hi"
+      
