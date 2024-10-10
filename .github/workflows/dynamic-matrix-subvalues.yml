@@ -127,8 +127,8 @@ jobs:
         env:
           MATRIX_CONTEXT: ${{ toJson(matrix) }}
         run: echo "$MATRIX_CONTEXT"
-      # - if: ${{ matrix.repositories.name == 'repo2' }}
-      #   run: sleep 10s && exit 1
+      - if: ${{ matrix.repositories.name == 'repo2' }}
+        run: sleep 10s && exit 0
       - name: create failures sometimes
         run: | 
           milliseconds=$(date +%s%N | cut -b1-13)
