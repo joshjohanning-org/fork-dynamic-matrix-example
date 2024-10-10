@@ -119,6 +119,8 @@ jobs:
       matrix: "${{ fromJson(needs.prepare-1.outputs.repositories) }}"
       fail-fast: false
       max-parallel: 15
+    outputs:
+      is-failure: ${{ steps.is-failure.outputs.is-failed }}
     steps:
       - run: echo "${{ toJson(matrix) }}"
       - name: Dump matrix context
@@ -129,9 +131,13 @@ jobs:
         run: | 
           milliseconds=$(date +%s%N | cut -b1-13)
           if (( milliseconds % 2 == 0 )); then
-              # exit 1
-              exit 0
+              exit 1
+              # exit 0
           fi
+      - name: create output var if failure
+        id: is-failure
+        if: failure()
+        run: echo "is-failure=true" >> "$GITHUB_OUTPUT"
       - name: upload status
         if: always()
         run: echo "${{ matrix.repositories.name }}, ${{ job.status }}" > ${{ matrix.repositories.name }}.txt
@@ -177,6 +183,12 @@ jobs:
     steps:
       - run: echo ${{ needs.prepare-1.outputs.repositories }}
       - run: echo ${{ needs.prepare-2.outputs.repositories }}
+
+  if-failure:
+    needs: [prepare-1, run-matrix-1]
+    runs-on: ubuntu-latest
+    steps:
+      - run: echo "${{ needs.run-matrix-1.outputs.is-failure }}
 
   # post:
   #   if: always()
