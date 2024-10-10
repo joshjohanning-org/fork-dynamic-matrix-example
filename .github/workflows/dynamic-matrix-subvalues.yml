@@ -149,6 +149,13 @@ jobs:
           name: ${{ matrix.repositories.name }}-1
           path: ${{ matrix.repositories.name }}.txt
 
+  if-failure:
+    needs: [prepare-1, run-matrix-1]
+    runs-on: ubuntu-latest
+    if: always() && needs.run-matrix-1.outputs.is-failure == 'true'
+    steps:
+      - run: echo "${{ needs.run-matrix-1.outputs.is-failure }}"
+
   run-matrix-2:
     needs: prepare-2
     name: ${{ matrix.repositories.name }}
@@ -185,13 +192,6 @@ jobs:
     steps:
       - run: echo ${{ needs.prepare-1.outputs.repositories }}
       - run: echo ${{ needs.prepare-2.outputs.repositories }}
-
-  if-failure:
-    needs: [prepare-1, run-matrix-1]
-    runs-on: ubuntu-latest
-    if: always() && needs.run-matrix-1.outputs.is-failure == 'true'
-    steps:
-      - run: echo "${{ needs.run-matrix-1.outputs.is-failure }}"
 
   # post:
   #   if: always()
