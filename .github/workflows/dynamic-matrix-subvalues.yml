@@ -13,11 +13,7 @@ jobs:
     - run: echo "hi"
     - run: |
         echo "::add-mask::${{ vars.var }}"
-        echo $var
-
-        var2="${{ vars.var2 }}"
-        echo "::add-mask::$var2"
-        echo $var2
+        echo "We are logging in here ${{ vars.var }}!"
   env-2:
     runs-on: ubuntu-latest
     if: always()
