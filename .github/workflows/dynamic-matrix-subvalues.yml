@@ -12,8 +12,7 @@ jobs:
     steps:
     - run: echo "hi"
     - run: |
-        var="${{ vars.var }}"
-        echo "::add-mask::$var"
+        echo "::add-mask::${{ vars.var }}"
         echo $var
 
         var2="${{ vars.var2 }}"
