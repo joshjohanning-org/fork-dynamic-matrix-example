@@ -17,6 +17,13 @@ jobs:
     needs: env-1
     steps:
     - run: echo "${{ needs.env-1.result }}"
+  env-3:
+    runs-on: ubuntu-latest
+    environment: prod2
+    if: always()
+    needs: env-2
+    steps:
+    - run: echo "hi"
   prepare-1:
     runs-on: ubuntu-latest
     outputs:
