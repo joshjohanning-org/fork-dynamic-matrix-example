@@ -3,9 +3,12 @@ on:
   push:
   workflow_dispatch:
 
+permissions: read-all
+
 jobs:
   prepare-1:
     runs-on: ubuntu-latest
+    environment: will-this-work
     outputs:
       repositories: ${{ steps.json.outputs.repositories }}
     steps:
