@@ -16,7 +16,7 @@ jobs:
     if: always()
     needs: env-1
     steps:
-    - run: echo "${{ jobs.env-1.result }}"
+    - run: echo "${{ needs.jobs.env-1.result }}"
   prepare-1:
     runs-on: ubuntu-latest
     outputs:
