@@ -6,9 +6,19 @@ on:
 permissions: read-all
 
 jobs:
+  env-1:
+    runs-on: ubuntu-latest
+    environment: prod
+    steps:
+    - run: echo "hi"
+  env-2:
+    runs-on: ubuntu-latest
+    if: always()
+    needs: env-1
+    steps:
+    - run: echo "${{ jobs.env-1.result }}"
   prepare-1:
     runs-on: ubuntu-latest
-    environment: will-this-work
     outputs:
       repositories: ${{ steps.json.outputs.repositories }}
     steps:
