@@ -12,9 +12,13 @@ jobs:
     steps:
     - run: echo "hi"
     - run: |
-        var="69$fi"
+        var="${{ vars.var }}"
         echo "::add-mask::$var"
         echo $var
+
+        var2="${{ vars.var2 }}"
+        echo "::add-mask::$var2"
+        echo $var2
   env-2:
     runs-on: ubuntu-latest
     if: always()
